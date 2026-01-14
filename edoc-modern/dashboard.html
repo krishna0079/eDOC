@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - eDoc</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="main-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-user">
+                    <div class="sidebar-avatar" id="userAvatar">AD</div>
+                    <div>
+                        <strong id="userName">Administrator</strong>
+                        <p class="text-muted" style="font-size: 0.875rem; margin: 0;" id="userEmail">admin@edoc.com</p>
+                    </div>
+                </div>
+                <button class="btn btn-error btn-sm" style="width: 100%; margin-top: 1rem;" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+
+            <ul class="sidebar-menu">
+                <li class="sidebar-menu-item">
+                    <a href="dashboard.html" class="sidebar-menu-link active">
+                        <i class="fas fa-home"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="javascript:void(0)" onclick="showSection('doctors')" class="sidebar-menu-link">
+                        <i class="fas fa-user-md"></i>
+                        Doctors
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="javascript:void(0)" onclick="showSection('schedule')" class="sidebar-menu-link">
+                        <i class="fas fa-calendar-alt"></i>
+                        Schedule
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="javascript:void(0)" onclick="showSection('appointments')" class="sidebar-menu-link">
+                        <i class="fas fa-clipboard-list"></i>
+                        Appointments
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="javascript:void(0)" onclick="showSection('patients')" class="sidebar-menu-link">
+                        <i class="fas fa-users"></i>
+                        Patients
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboardSection">
+                <div class="page-header flex justify-between items-center">
+                    <div>
+                        <h1 class="page-title">Dashboard</h1>
+                        <p class="page-subtitle">Welcome back, Administrator</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-muted">Today's Date:</span>
+                        <strong id="currentDate"></strong>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-icon primary">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="doctorCount">0</div>
+                        <div class="stat-label">Total Doctors</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-icon success">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="patientCount">0</div>
+                        <div class="stat-label">Total Patients</div>
+                    </div>
+                </div>
+
+                <!-- Quick Overview -->
+                <div class="grid-cols-2" style="display: grid; gap: 2rem; margin-top: 2rem;">
+                    <div class="glass-card-flat">
+                        <h3 class="mb-3">Upcoming Appointments</h3>
+                        <div class="table-container" style="max-height: 400px; overflow-y: auto;">
+                            <table id="upcomingAppointmentsTable">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Patient</th>
+                                        <th>Doctor</th>
+                                        <th>Session</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="upcomingAppointmentsBody">
+                                    <tr>
+                                        <td colspan="5" class="text-center text-muted">Loading...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="glass-card-flat">
+                        <h3 class="mb-3">Upcoming Sessions</h3>
+                        <div class="table-container" style="max-height: 400px; overflow-y: auto;">
+                            <table id="upcomingSessionsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Session Title</th>
+                                        <th>Doctor</th>
+                                        <th>Date & Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="upcomingSessionsBody">
+                                    <tr>
+                                        <td colspan="3" class="text-center text-muted">Loading...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Doctors Section -->
+            <section id="doctorsSection" style="display: none;">
+                <div class="page-header flex justify-between items-center">
+                    <div>
+                        <h1 class="page-title">Doctors</h1>
+                        <p class="page-subtitle">Manage doctor accounts and information</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="openModal('addDoctorModal')">
+                        <i class="fas fa-plus"></i>
+                        Add New Doctor
+                    </button>
+                </div>
+
+                <div class="glass-card-flat">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3>All Doctors (<span id="doctorListCount">0</span>)</h3>
+                        <input type="text" class="form-input" id="doctorSearch"
+                            placeholder="Search Doctor name or Email" style="max-width: 300px;"
+                            onkeyup="filterTable('doctorsTable', 'doctorSearch', [0, 1])">
+                    </div>
+                    <div class="table-container">
+                        <table id="doctorsTable">
+                            <thead>
+                                <tr>
+                                    <th>Doctor Name</th>
+                                    <th>Email</th>
+                                    <th>Specialties</th>
+                                    <th>Events</th>
+                                </tr>
+                            </thead>
+                            <tbody id="doctorsTableBody">
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Schedule Section -->
+            <section id="scheduleSection" style="display: none;">
+                <div class="page-header flex justify-between items-center">
+                    <div>
+                        <h1 class="page-title">Schedule Manager</h1>
+                        <p class="page-subtitle">Manage doctor availability sessions</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="openModal('addSessionModal')">
+                        <i class="fas fa-plus"></i>
+                        Add a Session
+                    </button>
+                </div>
+
+                <div class="glass-card-flat">
+                    <h3 class="mb-3">All Sessions (<span id="sessionListCount">0</span>)</h3>
+                    <div class="table-container">
+                        <table id="sessionsTable">
+                            <thead>
+                                <tr>
+                                    <th>Session Title</th>
+                                    <th>Doctor</th>
+                                    <th>Scheduled Date & Time</th>
+                                    <th>Max Bookings</th>
+                                    <th>Events</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sessionsTableBody">
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Appointments Section -->
+            <section id="appointmentsSection" style="display: none;">
+                <div class="page-header">
+                    <h1 class="page-title">Appointments</h1>
+                    <p class="page-subtitle">View all patient appointment bookings</p>
+                </div>
+
+                <div class="glass-card-flat">
+                    <h3 class="mb-3">All Appointments (<span id="appointmentListCount">0</span>)</h3>
+                    <div class="table-container">
+                        <table id="appointmentsTable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Patient</th>
+                                    <th>Doctor</th>
+                                    <th>Session</th>
+                                    <th>Date & Time</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="appointmentsTableBody">
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Patients Section -->
+            <section id="patientsSection" style="display: none;">
+                <div class="page-header">
+                    <h1 class="page-title">Patients</h1>
+                    <p class="page-subtitle">View registered patient information</p>
+                </div>
+
+                <div class="glass-card-flat">
+                    <h3 class="mb-3">All Patients (<span id="patientListCount">0</span>)</h3>
+                    <div class="table-container">
+                        <table id="patientsTable">
+                            <thead>
+                                <tr>
+                                    <th>Patient Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Date of Birth</th>
+                                    <th>Registered Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="patientsTableBody">
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add Doctor Modal -->
+    <div id="addDoctorModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Doctor</h2>
+                <button class="modal-close" onclick="closeModal('addDoctorModal')">&times;</button>
+            </div>
+            <form id="addDoctorForm">
+                <div class="form-group">
+                    <label class="form-label">Doctor Name:</label>
+                    <input type="text" class="form-input" id="doctorName" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email:</label>
+                    <input type="email" class="form-input" id="doctorEmail" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password:</label>
+                    <input type="password" class="form-input" id="doctorPassword" required minlength="3">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Specialty:</label>
+                    <select class="form-select" id="doctorSpecialty" required>
+                        <option value="">Select specialty</option>
+                        <option value="Accident and emergency">Accident and emergency</option>
+                        <option value="Cardiology">Cardiology</option>
+                        <option value="Dermatology">Dermatology</option>
+                        <option value="General Practice">General Practice</option>
+                        <option value="Neurology">Neurology</option>
+                        <option value="Orthopedics">Orthopedics</option>
+                        <option value="Pediatrics">Pediatrics</option>
+                        <option value="Psychiatry">Psychiatry</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phone (Optional):</label>
+                    <input type="tel" class="form-input" id="doctorPhone">
+                </div>
+                <div class="flex gap-2" style="justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary"
+                        onclick="closeModal('addDoctorModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="addDoctorBtn">Add Doctor</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Session Modal -->
+    <div id="addSessionModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Schedule a Session</h2>
+                <button class="modal-close" onclick="closeModal('addSessionModal')">&times;</button>
+            </div>
+            <form id="addSessionForm">
+                <div class="form-group">
+                    <label class="form-label">Session Title:</label>
+                    <input type="text" class="form-input" id="sessionTitle" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Doctor:</label>
+                    <select class="form-select" id="sessionDoctor" required>
+                        <option value="">Choose Doctor from the list</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Date:</label>
+                    <input type="date" class="form-input" id="sessionDate" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Time:</label>
+                    <input type="time" class="form-input" id="sessionTime" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Max Bookings:</label>
+                    <input type="number" class="form-input" id="sessionMaxBookings" value="50" min="1" required>
+                </div>
+                <div class="flex gap-2" style="justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary"
+                        onclick="closeModal('addSessionModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="addSessionBtn">Add Session</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/utils.js"></script>
+    <script src="admin.js"></script>
+</body>
+
+</html>

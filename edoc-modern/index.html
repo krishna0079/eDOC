@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eDoc - The E-Channelling Project | Avoid Hassles & Delays</title>
+    <meta name="description" content="Find your doctor online. Book appointments as you wish with eDoc. We offer you a free doctor channeling service.">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Hero Section Specific Styles (kept inline for portability) */
+        .hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 2rem; overflow: hidden; }
+        .hero-background { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('/images/hero-bg.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat; filter: brightness(0.4); z-index: -1; }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%); z-index: -1; }
+        .hero-content { max-width: 900px; z-index: 1; animation: fadeIn 1s ease; }
+        .hero-title { font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 800; margin-bottom: 1.5rem; line-height: 1.1; text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3); }
+        .hero-subtitle { font-size: clamp(1rem, 2vw, 1.25rem); color: var(--text-secondary); margin-bottom: 1rem; text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3); }
+        .hero-description { font-size: clamp(1rem, 2vw, 1.125rem); color: var(--text-secondary); margin-bottom: 2.5rem; text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3); }
+        .hero-cta { display: inline-flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+        .footer-credit { position: absolute; bottom: 2rem; right: 2rem; color: var(--text-muted); font-size: 0.875rem; z-index: 1; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        .hero-content { animation: fadeIn 1s ease, float 6s ease-in-out infinite; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="navbar-brand">eDoc. <span>| THE E-CHANNELLING PROJECT</span></a>
+            <ul class="navbar-nav">
+                <li><a href="/login.html" class="nav-link">LOGIN</a></li>
+                <li><a href="/register.html" class="nav-link">REGISTER</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-background"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">Avoid Hassles & Delays.</h1>
+            <p class="hero-subtitle">How is health today. Sounds like not good!</p>
+            <p class="hero-description">Don't worry. Find your doctor online Book as you wish with eDoc.<br>We offer you a free doctor channelling service. Make your appointment now.</p>
+            <div class="hero-cta">
+                <a href="/login.html" class="btn btn-primary btn-lg"><i class="fas fa-calendar-check"></i> Make Appointment</a>
+                <a href="/register.html" class="btn btn-secondary btn-lg"><i class="fas fa-user-plus"></i> Get Started</a>
+            </div>
+        </div>
+        <div class="footer-credit">A Web Solution by Antigravity</div>
+    </section>
+
+    <section style="padding: 4rem 2rem; background: var(--bg-secondary);">
+        <div class="container">
+            <h2 class="text-center mb-5">Why Choose eDoc?</h2>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-card-icon primary"><i class="fas fa-user-md"></i></div><h3>Find Best Doctors</h3><p>Browse through our extensive list of qualified doctors with different specialties.</p></div>
+                <div class="stat-card"><div class="stat-card-icon success"><i class="fas fa-calendar"></i></div><h3>Book Online</h3><p>Schedule appointments at your convenience. View available time slots and book instantly.</p></div>
+                <div class="stat-card"><div class="stat-card-icon warning"><i class="fas fa-clock"></i></div><h3>Save Time</h3><p>No more waiting in long queues. Book your appointment from the comfort of your home.</p></div>
+                <div class="stat-card"><div class="stat-card-icon secondary"><i class="fas fa-shield-alt"></i></div><h3>Secure & Private</h3><p>Your medical information is safe with us. We prioritize your privacy and security.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section style="padding: 4rem 2rem; text-align: center;">
+        <div class="container"><h2 class="mb-3">Ready to Get Started?</h2><p class="text-muted mb-4">Join thousands of patients who trust eDoc for their healthcare needs.</p><a href="/register.html" class="btn btn-accent btn-lg"><i class="fas fa-rocket"></i> Create Account Now</a></div>
+    </section>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const heroBackground = document.querySelector('.hero-background');
+            const scrolled = window.pageYOffset;
+            if (heroBackground) heroBackground.style.transform = `translateY(${scrolled * 0.5}px)`;
+        });
+    </script>
+</body>
+</html>
